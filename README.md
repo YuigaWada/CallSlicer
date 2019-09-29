@@ -1,9 +1,9 @@
-<div style="text-align: center;">
-<h1>CallSlicer</h1>
-<img src="images/CallSlicer.png" width=60%>
-</div>
 
-## About
+<h1 align="center">CallSlicer</h1>
+<p align="center">
+<img src="images/CallSlicer.png" width=60%>
+</p>
+
 
 Apple Watch does not show you notifications of LINE call.
 
@@ -14,18 +14,23 @@ Apple Watch does not show you notifications of LINE call.
 
 <br>
 
-
+<!--
 ## Installation
 
 Search ```CallSlicer``` in Sileo or Cydia.
 
-CallSlicer is uploaded in ~~.
+CallSlicer is uploaded in ~~.-->
 
 
 ## Todo
 
-- [ ] checking whether apple watch is connected or not.
+- [ ] check whether apple watch is connected or not.
 - [ ] Other apps that use CallKit.
+- [x] 画面状態のcheck
+- [ ] イヤホンの着脱check
+- [ ] silent check
+- [ ] 振動の変更
+- [ ] Settings
 
 
 ## Contribute
