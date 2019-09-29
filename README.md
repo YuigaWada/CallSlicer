@@ -28,11 +28,11 @@ CallSlicer is uploaded in ~~.-->
 - [ ] Other apps that use CallKit.
 - [x] 画面状態のcheck
 - [ ] イヤホンの着脱check
-- [ ] silent check
+- [x] silent check
 - [x] 振動の変更
 - [ ] Settings
 - [x] 余計なメッセージを削除
-- [ ] Fixed isOnLockscreen
+- [ ] Fix isOnLockscreen
 - [ ] 通知遅い？
 
 ## Contribute
