@@ -22,6 +22,7 @@ static dispatch_queue_t getBBServerQueue() {
 
 static id LINE = nil;
 static bool isOnLockscreen = true;
+static NSString *targetSectionID = @"jp.naver.line";
 
 static bool isConnected() {
     NSLog(@"%@", LINE);
@@ -89,7 +90,7 @@ static void sliceNotification() //called on SpringBoard.
     if(isOnLockscreen)
     {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-            fakeNotification(@"jp.naver.line", @"You are receiving a Call!");
+            fakeNotification(targetSectionID, @"You are receiving a Call!");
         });
     }
 }
@@ -173,12 +174,17 @@ static void lockstate(CFNotificationCenterRef center, void *observer, CFStringRe
 
 - (void)publishBulletin:(BBBulletin *)bulletin destinations:(NSUInteger)destinations
 {
+    BBSound *sound = bulletin.sound;
+    bool hasSound = sound != nil;
+    bool isLINE = [bulletin.sectionID isEqualToString: targetSectionID];
+    if(!hasSound && isLINE) { return; }
+    
     %orig;
     
     //Debug
-    BBSound *sound = bulletin.sound;
     NSLog(@"BBServer publishBulletin\nTitle: %@\nSubtitle: %@\nMessage: %@\nBulletin: %@\ndestinations: %@", bulletin.title, bulletin.subtitle, bulletin.message, bulletin, @(destinations).stringValue);
     NSLog(@"BBSound: %@, \nVibration Pattern: %@ \nVibration Identifier: %@", sound, [sound vibrationPattern], [sound vibrationIdentifier]);
+    NSLog(@"hasSound: %d, \nisLINE: %d, \nbulletin.sectionID: %@, \ntargetSectionID: %@", hasSound, isLINE, bulletin.sectionID, targetSectionID);
 }
 
 %end

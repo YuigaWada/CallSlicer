@@ -29,9 +29,9 @@ CallSlicer is uploaded in ~~.-->
 - [x] 画面状態のcheck
 - [ ] イヤホンの着脱check
 - [ ] silent check
-- [ ] 振動の変更
+- [x] 振動の変更
 - [ ] Settings
-
+- [x] 余計なメッセージを削除
 
 ## Contribute
 
