@@ -1,7 +1,8 @@
-<div style="text-align: center;">
-<h1>CallSlicer</h1>
+
+<h1 align="center">CallSlicer</h1>
+<p align="center">
 <img src="images/CallSlicer.png" width=60%>
-</div>
+</p>
 
 ## About
 
