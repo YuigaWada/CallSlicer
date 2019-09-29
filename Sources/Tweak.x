@@ -45,9 +45,10 @@ static bool isConnected() {
 
 static BBSound *getBBSound()
 {
-    BBSound *sound = [[%c(BBSound) alloc] initWithToneAlert:1 toneIdentifier:nil vibrationIdentifier:@"Accent"];
-    [sound setRepeats:false];
+    TLAlertConfiguration *toneAlertConfig = [[%c(TLAlertConfiguration) alloc] initWithType: 1];
+    [toneAlertConfig setShouldRepeat:false];
     
+    BBSound *sound = [[%c(BBSound) alloc] initWithToneAlertConfiguration: toneAlertConfig];
     return sound;
 }
 
@@ -79,6 +80,7 @@ static void fakeNotification(NSString *sectionID, NSString *message) {
         });
     }
     
+
 }
 
 
@@ -158,7 +160,6 @@ static void lockstate(CFNotificationCenterRef center, void *observer, CFStringRe
     
     bool needSlicing = isConnected();
     NSLog(@"AppleWarch: %d",needSlicing);
-    
     
     CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), (CFStringRef)@"com.yuigawada.calllslicer/push-notification", nil, nil, true);
     %orig;

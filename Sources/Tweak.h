@@ -7,6 +7,7 @@
 #import <BulletinBoard/BBAction.h>
 #import <dlfcn.h>
 #import "./headers/BatteryCenter/BCBatteryDeviceController.h"
+#import "./headers/ToneLibrary/TLAlertConfiguration.h"
 
 @import WatchConnectivity;
 
@@ -34,6 +35,7 @@
 @interface BBSound : NSObject
 - (id)initWithToneAlert:(long long)arg1;
 - (id)initWithToneAlert:(long long)arg1 toneIdentifier:(id)arg2 vibrationIdentifier:(id)arg3;
+- (id)initWithToneAlertConfiguration:(id)arg1;
 - (void)setRepeats:(bool)arg1;
 - (id)vibrationPattern;
 - (id)vibrationIdentifier;
