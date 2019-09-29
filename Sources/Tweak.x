@@ -30,7 +30,7 @@ static bool isConnected() {
     if(LINE == nil)
     {
         NSLog(@"LINE is nil.");
-        return false;
+        return true; //For debug
     }
     
     if ([WCSession isSupported]) {
@@ -41,7 +41,12 @@ static bool isConnected() {
         NSLog(@"WCSession is supported.");
         return session.paired && session.reachable;
     }
-    return false;
+    return true; //For debug
+}
+
+static bool isMuted() { //Must be called on SpringBoard.
+//    NSLog(@"SBMediaController sharedInstance: %@, \nisRingerMuted:%d",[%c(SBMediaController) sharedInstance], [[%c(SBMediaController) sharedInstance] isRingerMuted]);
+    return [[%c(SBMediaController) sharedInstance] isRingerMuted];
 }
 
 static BBSound *getBBSound()
@@ -87,7 +92,7 @@ static void fakeNotification(NSString *sectionID, NSString *message) {
 
 static void sliceNotification() //called on SpringBoard.
 {
-    if(isOnLockscreen)
+    if(isOnLockscreen && isMuted())
     {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
             fakeNotification(targetSectionID, @"You are receiving a Call!");

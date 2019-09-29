@@ -82,3 +82,9 @@
 @interface SBDashBoardViewController : UIViewController
 @property (assign,getter=isAuthenticated,nonatomic) BOOL authenticated;
 @end
+
+
+@interface SBMediaController : NSObject
++(id)sharedInstance;
+-(BOOL)isRingerMuted;
+@end

@@ -32,6 +32,8 @@ CallSlicer is uploaded in ~~.-->
 - [x] 振動の変更
 - [ ] Settings
 - [x] 余計なメッセージを削除
+- [ ] Fixed isOnLockscreen
+- [ ] 通知遅い？
 
 ## Contribute
 

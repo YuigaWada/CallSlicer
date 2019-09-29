@@ -31,7 +31,7 @@ static bool isConnected() {
     if(LINE == nil)
     {
         NSLog(@"LINE is nil.");
-        return false;
+        return true; 
     }
     
     if ([WCSession isSupported]) {
@@ -42,7 +42,7 @@ static bool isConnected() {
         NSLog(@"WCSession is supported.");
         return session.paired && session.reachable;
     }
-    return false;
+    return true; 
 }
 
 
@@ -66,10 +66,16 @@ static bool isConnected() {
 #define _LOGOS_RETURN_RETAINED
 #endif
 
-@class TLAlertConfiguration; @class SpringBoard; @class BBAction; @class BBBulletin; @class BBSound; @class BBServer; @class AppDelegate; @class CXProvider; @class SBDashBoardViewController; 
+@class SBDashBoardViewController; @class SBMediaController; @class AppDelegate; @class TLAlertConfiguration; @class BBBulletin; @class BBAction; @class BBServer; @class CXProvider; @class BBSound; @class SpringBoard; 
 static void (*_logos_orig$_ungrouped$SpringBoard$applicationDidFinishLaunching$)(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST, SEL, id); static void _logos_method$_ungrouped$SpringBoard$applicationDidFinishLaunching$(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST, SEL, id); static AppDelegate* _logos_method$_ungrouped$AppDelegate$init(_LOGOS_SELF_TYPE_INIT AppDelegate*, SEL) _LOGOS_RETURN_RETAINED; static void (*_logos_orig$_ungrouped$SBDashBoardViewController$viewWillAppear$)(_LOGOS_SELF_TYPE_NORMAL SBDashBoardViewController* _LOGOS_SELF_CONST, SEL, BOOL); static void _logos_method$_ungrouped$SBDashBoardViewController$viewWillAppear$(_LOGOS_SELF_TYPE_NORMAL SBDashBoardViewController* _LOGOS_SELF_CONST, SEL, BOOL); static void (*_logos_orig$_ungrouped$CXProvider$reportNewIncomingCallWithUUID$update$completion$)(_LOGOS_SELF_TYPE_NORMAL CXProvider* _LOGOS_SELF_CONST, SEL, id, id, id ); static void _logos_method$_ungrouped$CXProvider$reportNewIncomingCallWithUUID$update$completion$(_LOGOS_SELF_TYPE_NORMAL CXProvider* _LOGOS_SELF_CONST, SEL, id, id, id ); static void (*_logos_orig$_ungrouped$BBServer$publishBulletin$destinations$)(_LOGOS_SELF_TYPE_NORMAL BBServer* _LOGOS_SELF_CONST, SEL, BBBulletin *, NSUInteger); static void _logos_method$_ungrouped$BBServer$publishBulletin$destinations$(_LOGOS_SELF_TYPE_NORMAL BBServer* _LOGOS_SELF_CONST, SEL, BBBulletin *, NSUInteger); static BBServer* (*_logos_orig$_ungrouped$BBServer$init)(_LOGOS_SELF_TYPE_INIT BBServer*, SEL) _LOGOS_RETURN_RETAINED; static BBServer* _logos_method$_ungrouped$BBServer$init(_LOGOS_SELF_TYPE_INIT BBServer*, SEL) _LOGOS_RETURN_RETAINED; static BBServer* (*_logos_orig$_ungrouped$BBServer$initWithQueue$)(_LOGOS_SELF_TYPE_INIT BBServer*, SEL, id) _LOGOS_RETURN_RETAINED; static BBServer* _logos_method$_ungrouped$BBServer$initWithQueue$(_LOGOS_SELF_TYPE_INIT BBServer*, SEL, id) _LOGOS_RETURN_RETAINED; static BBServer* (*_logos_orig$_ungrouped$BBServer$initWithQueue$dataProviderManager$syncService$dismissalSyncCache$observerListener$utilitiesListener$conduitListener$systemStateListener$settingsListener$)(_LOGOS_SELF_TYPE_INIT BBServer*, SEL, id, id, id, id, id, id, id, id, id) _LOGOS_RETURN_RETAINED; static BBServer* _logos_method$_ungrouped$BBServer$initWithQueue$dataProviderManager$syncService$dismissalSyncCache$observerListener$utilitiesListener$conduitListener$systemStateListener$settingsListener$(_LOGOS_SELF_TYPE_INIT BBServer*, SEL, id, id, id, id, id, id, id, id, id) _LOGOS_RETURN_RETAINED; static void (*_logos_orig$_ungrouped$BBServer$dealloc)(_LOGOS_SELF_TYPE_NORMAL BBServer* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$BBServer$dealloc(_LOGOS_SELF_TYPE_NORMAL BBServer* _LOGOS_SELF_CONST, SEL); 
-static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$BBAction(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("BBAction"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$BBBulletin(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("BBBulletin"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$TLAlertConfiguration(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("TLAlertConfiguration"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$BBSound(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("BBSound"); } return _klass; }
+static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$BBSound(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("BBSound"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$TLAlertConfiguration(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("TLAlertConfiguration"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$BBBulletin(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("BBBulletin"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$BBAction(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("BBAction"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SBMediaController(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SBMediaController"); } return _klass; }
 #line 47 "Tweak.x"
+static bool isMuted() { 
+    NSLog(@"SBMediaController sharedInstance: %@, \nisRingerMuted:%d",[_logos_static_class_lookup$SBMediaController() sharedInstance], [[_logos_static_class_lookup$SBMediaController() sharedInstance] isRingerMuted]);
+    
+    return [[_logos_static_class_lookup$SBMediaController() sharedInstance] isRingerMuted];
+}
+
 static BBSound *getBBSound()
 {
     TLAlertConfiguration *toneAlertConfig = [[_logos_static_class_lookup$TLAlertConfiguration() alloc] initWithType: 1];
@@ -113,7 +119,7 @@ static void fakeNotification(NSString *sectionID, NSString *message) {
 
 static void sliceNotification() 
 {
-    if(isOnLockscreen)
+    if(isOnLockscreen && isMuted())
     {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
             fakeNotification(targetSectionID, @"You are receiving a Call!");
@@ -245,7 +251,7 @@ static void _logos_method$_ungrouped$BBServer$dealloc(_LOGOS_SELF_TYPE_NORMAL BB
 
 
 
-static __attribute__((constructor)) void _logosLocalCtor_060ad924(int __unused argc, char __unused **argv, char __unused **envp)
+static __attribute__((constructor)) void _logosLocalCtor_705f2172(int __unused argc, char __unused **argv, char __unused **envp)
 {
     NSString *processName = [NSProcessInfo processInfo].processName;
     bool isSpringboard = [@"SpringBoard" isEqualToString:processName];
@@ -281,4 +287,4 @@ static __attribute__((constructor)) void _logosLocalCtor_060ad924(int __unused a
 }
 static __attribute__((constructor)) void _logosLocalInit() {
 {Class _logos_class$_ungrouped$SpringBoard = objc_getClass("SpringBoard"); MSHookMessageEx(_logos_class$_ungrouped$SpringBoard, @selector(applicationDidFinishLaunching:), (IMP)&_logos_method$_ungrouped$SpringBoard$applicationDidFinishLaunching$, (IMP*)&_logos_orig$_ungrouped$SpringBoard$applicationDidFinishLaunching$);Class _logos_class$_ungrouped$AppDelegate = objc_getClass("AppDelegate"); { char _typeEncoding[1024]; unsigned int i = 0; _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = ':'; i += 1; _typeEncoding[i] = '\0'; class_addMethod(_logos_class$_ungrouped$AppDelegate, @selector(init), (IMP)&_logos_method$_ungrouped$AppDelegate$init, _typeEncoding); }Class _logos_class$_ungrouped$SBDashBoardViewController = objc_getClass("SBDashBoardViewController"); MSHookMessageEx(_logos_class$_ungrouped$SBDashBoardViewController, @selector(viewWillAppear:), (IMP)&_logos_method$_ungrouped$SBDashBoardViewController$viewWillAppear$, (IMP*)&_logos_orig$_ungrouped$SBDashBoardViewController$viewWillAppear$);Class _logos_class$_ungrouped$CXProvider = objc_getClass("CXProvider"); MSHookMessageEx(_logos_class$_ungrouped$CXProvider, @selector(reportNewIncomingCallWithUUID:update:completion:), (IMP)&_logos_method$_ungrouped$CXProvider$reportNewIncomingCallWithUUID$update$completion$, (IMP*)&_logos_orig$_ungrouped$CXProvider$reportNewIncomingCallWithUUID$update$completion$);Class _logos_class$_ungrouped$BBServer = objc_getClass("BBServer"); MSHookMessageEx(_logos_class$_ungrouped$BBServer, @selector(publishBulletin:destinations:), (IMP)&_logos_method$_ungrouped$BBServer$publishBulletin$destinations$, (IMP*)&_logos_orig$_ungrouped$BBServer$publishBulletin$destinations$);MSHookMessageEx(_logos_class$_ungrouped$BBServer, @selector(init), (IMP)&_logos_method$_ungrouped$BBServer$init, (IMP*)&_logos_orig$_ungrouped$BBServer$init);MSHookMessageEx(_logos_class$_ungrouped$BBServer, @selector(initWithQueue:), (IMP)&_logos_method$_ungrouped$BBServer$initWithQueue$, (IMP*)&_logos_orig$_ungrouped$BBServer$initWithQueue$);MSHookMessageEx(_logos_class$_ungrouped$BBServer, @selector(initWithQueue:dataProviderManager:syncService:dismissalSyncCache:observerListener:utilitiesListener:conduitListener:systemStateListener:settingsListener:), (IMP)&_logos_method$_ungrouped$BBServer$initWithQueue$dataProviderManager$syncService$dismissalSyncCache$observerListener$utilitiesListener$conduitListener$systemStateListener$settingsListener$, (IMP*)&_logos_orig$_ungrouped$BBServer$initWithQueue$dataProviderManager$syncService$dismissalSyncCache$observerListener$utilitiesListener$conduitListener$systemStateListener$settingsListener$);MSHookMessageEx(_logos_class$_ungrouped$BBServer, sel_registerName("dealloc"), (IMP)&_logos_method$_ungrouped$BBServer$dealloc, (IMP*)&_logos_orig$_ungrouped$BBServer$dealloc);} }
-#line 256 "Tweak.x"
+#line 262 "Tweak.x"
