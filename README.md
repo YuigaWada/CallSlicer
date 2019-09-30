@@ -30,10 +30,11 @@ CallSlicer is uploaded in ~~.-->
 - [ ] イヤホンの着脱check
 - [x] silent check
 - [x] 振動の変更
-- [ ] Settings
+- [x] Settings
 - [x] 余計なメッセージを削除
 - [ ] Fix isOnLockscreen
 - [ ] 通知遅い？
+- [ ] 設定→ SourceCode押せない
 
 ## Contribute
 
