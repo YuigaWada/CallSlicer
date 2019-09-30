@@ -19,8 +19,6 @@ static dispatch_queue_t getBBServerQueue() {
 
 
 
-
-static id LINE = nil;
 static bool isOnLockscreen = true;
 static NSString *targetSectionID = @"jp.naver.line";
 
@@ -29,21 +27,16 @@ BOOL enabled = true;
 //NSString *message;
 
 static bool isConnected() {
-    NSLog(@"%@", LINE);
-
-    if(LINE == nil)
-    {
-        NSLog(@"LINE is nil.");
-        return true; //For debug
-    }
+    id naverLine = [UIApplication sharedApplication];
     
+    NSLog(@"LINE instance: \n%@", naverLine);
     if ([WCSession isSupported]) {
         WCSession* session = [WCSession defaultSession];
-        session.delegate = LINE;
+        session.delegate = naverLine;
         [session activateSession];
         
         NSLog(@"WCSession is supported.");
-        return session.paired && session.reachable;
+        return session.paired;
     }
     return true; //For debug
 }
@@ -127,19 +120,9 @@ static void lockstate(CFNotificationCenterRef center, void *observer, CFStringRe
 
 //-MARK: SpringBoard
 %hook SpringBoard
+
 -(void)applicationDidFinishLaunching:(id)application {
     %orig;
-}
-%end
-
-%hook AppDelegate
-
-%new
--(id)init {
-    NSLog(@"AppDeleagte init");
-    LINE = self;
-    
-    return self;
 }
 
 %end
