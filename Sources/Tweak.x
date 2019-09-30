@@ -167,7 +167,7 @@ static void lockstate(CFNotificationCenterRef center, void *observer, CFStringRe
     bool needSlicing = isConnected();
     NSLog(@"AppleWarch: %d",needSlicing);
     
-    CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), (CFStringRef)@"com.yuigawada.calllslicer/push-notification", nil, nil, true);
+    CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), (CFStringRef)@"com.yuigawada.callslicer/push-notification", nil, nil, true);
     %orig;
 }
 
@@ -233,7 +233,7 @@ static void lockstate(CFNotificationCenterRef center, void *observer, CFStringRe
         CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(),
                                         NULL,
                                         (CFNotificationCallback)sliceNotification,
-                                        (CFStringRef)@"com.yuigawada.calllslicer/push-notification",
+                                        (CFStringRef)@"com.yuigawada.callslicer/push-notification",
                                         NULL,
                                         (CFNotificationSuspensionBehavior)kNilOptions);
         
