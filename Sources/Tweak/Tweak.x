@@ -24,6 +24,10 @@ static id LINE = nil;
 static bool isOnLockscreen = true;
 static NSString *targetSectionID = @"jp.naver.line";
 
+HBPreferences *preferences;
+BOOL enabled = true;
+//NSString *message;
+
 static bool isConnected() {
     NSLog(@"%@", LINE);
 
@@ -92,7 +96,7 @@ static void fakeNotification(NSString *sectionID, NSString *message) {
 
 static void sliceNotification() //called on SpringBoard.
 {
-    if(isOnLockscreen && isMuted())
+    if(enabled && isOnLockscreen && isMuted())
     {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
             fakeNotification(targetSectionID, @"You are receiving a Call!");
@@ -182,7 +186,7 @@ static void lockstate(CFNotificationCenterRef center, void *observer, CFStringRe
     BBSound *sound = bulletin.sound;
     bool hasSound = sound != nil;
     bool isLINE = [bulletin.sectionID isEqualToString: targetSectionID];
-    if(!hasSound && isLINE) { return; }
+    if(!hasSound && isLINE && !enabled) { return; }
     
     %orig;
     
@@ -229,7 +233,14 @@ static void lockstate(CFNotificationCenterRef center, void *observer, CFStringRe
     NSString *processName = [NSProcessInfo processInfo].processName;
     bool isSpringboard = [@"SpringBoard" isEqualToString:processName];
     
-    if (isSpringboard) {
+    
+    preferences = [[HBPreferences alloc] initWithIdentifier:@"com.yuigawada.callslicer"];
+    
+    [preferences registerBool:&enabled default:YES forKey:@"Enabled"];
+//    [preferences registerObject:&message default:@"You are receiving a Call!" forKey:@"Message"];
+    
+    
+    if (isSpringboard && enabled) {
         CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(),
                                         NULL,
                                         (CFNotificationCallback)sliceNotification,
@@ -253,8 +264,8 @@ static void lockstate(CFNotificationCenterRef center, void *observer, CFStringRe
                                         CFSTR("com.apple.springboard.lockstate"),
                                         NULL,
                                         CFNotificationSuspensionBehaviorDeliverImmediately);
-        
-        
     }
     
+    
+    NSLog(@"Enabled: %d", enabled);
 }

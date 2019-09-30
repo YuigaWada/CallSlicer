@@ -1,6 +1,6 @@
 Package: com.yuigawada.callslicer
 Name: CallSlicer
-Depends: mobilesubstrate
+Depends: mobilesubstrate, ws.hbang.common (>= 1.2)
 Version: 0.0.1
 Architecture: iphoneos-arm
 Description: CallSlicer enables you to receive LINE call on your Apple Watch!
