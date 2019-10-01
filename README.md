@@ -34,7 +34,7 @@ CallSlicer is uploaded in ~~.-->
 - [x] 余計なメッセージを削除
 - [ ] Fix isOnLockscreen
 - [ ] 通知遅い？
-- [ ] 設定→ SourceCode押せない
+- [x] 設定→ SourceCode押せない
 
 ## Contribute
 

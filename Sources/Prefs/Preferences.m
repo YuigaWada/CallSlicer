@@ -18,7 +18,7 @@
 }
 
 
-//HBTwitterCell,HBLinkTableCell
+//HBTwitterCell,HBLinkTableCell don't allow me to press, so I prepared actions myself.
 - (void)openGitHub:(id)sender {
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://github.com/YuigaWada/CallSlicer"]
               options:@{}
