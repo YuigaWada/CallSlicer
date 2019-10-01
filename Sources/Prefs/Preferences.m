@@ -17,4 +17,18 @@
     [t launch];
 }
 
+
+//HBTwitterCell,HBLinkTableCell
+- (void)openGitHub:(id)sender {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://github.com/YuigaWada/CallSlicer"]
+              options:@{}
+    completionHandler:nil];
+}
+- (void)openTwitter:(id)sender {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/YuigaWada"]
+              options:@{}
+    completionHandler:nil];
+}
+
+
 @end
