@@ -1,8 +1,0 @@
-{
-	Filter = {
-		Bundles = (
-			"jp.naver.line",
-			"com.apple.springboard",
-		);
-	};
-}
