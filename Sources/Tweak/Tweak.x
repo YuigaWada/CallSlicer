@@ -34,6 +34,7 @@ static bool distributedCenterIsAvailable()
 
 static bool isOnLockscreen = true;
 static NSString *targetSectionID = @"jp.naver.line";
+static bool isBeingLocked = true;
 
 HBPreferences *preferences;
 BOOL enabled = true;
@@ -135,14 +136,22 @@ static void sliceNotification(CFNotificationCenterRef center, void *observer, CF
 static void displayStatus(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
 {
     isOnLockscreen = true;
-    NSLog(@"isOnLockscreen: %d", isOnLockscreen);
+    NSLog(@"displayStatus - isOnLockscreen: %d", isOnLockscreen);
 }
 
 static void lockstate(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
 {
-    isOnLockscreen = false;
-    NSLog(@"isOnLockscreen: %d", isOnLockscreen);
+    isOnLockscreen = isBeingLocked ? isBeingLocked : !isOnLockscreen;
+    isBeingLocked = false;
+    NSLog(@"lockstate - isOnLockscreen: %d", isOnLockscreen);
 }
+
+static void lockcomplete(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
+{
+    isBeingLocked = true;
+}
+                             
+                             
 
 
 
@@ -163,7 +172,7 @@ static void lockstate(CFNotificationCenterRef center, void *observer, CFStringRe
     %orig;
     
     isOnLockscreen = !self.authenticated;
-    NSLog(@"isOnLockscreen: %d", isOnLockscreen);
+    NSLog(@"viewWillAppear - isOnLockscreen: %d", isOnLockscreen);
     
     //Debug
     //    id ins = [%c(BCBatteryDeviceController) sharedInstance];
@@ -288,12 +297,23 @@ static void lockstate(CFNotificationCenterRef center, void *observer, CFStringRe
                                         NULL,
                                         CFNotificationSuspensionBehaviorDeliverImmediately);
         
+        //Called when the device is being Locked or Unlocked.
         CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(),
                                         NULL,
                                         lockstate,
                                         CFSTR("com.apple.springboard.lockstate"),
                                         NULL,
                                         CFNotificationSuspensionBehaviorDeliverImmediately);
+        
+        //Called ONLY when the device is being Locked.
+        //(But lockcomplete is always called before lockstate being called.)
+        CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(),
+                                        NULL,
+                                        lockcomplete,
+                                        CFSTR("com.apple.springboard.lockcomplete"),
+                                        NULL,
+                                        CFNotificationSuspensionBehaviorDeliverImmediately);
+        
     }
     else {
         targetSectionID = [[NSBundle mainBundle] bundleIdentifier];

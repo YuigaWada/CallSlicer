@@ -30,7 +30,7 @@ CallSlicer is uploaded to Packix.-->
 - [x] Settings
 - [x] 余計なメッセージを削除
 - [x] 設定→ SourceCode押せない
-- [ ] Fix isOnLockscreen
+- [x] Fix isOnLockscreen Bug.
 - [ ] 通知遅い？
 - [ ] イヤホンの着脱check
 - [ ] check whether apple watch is connected or not.
