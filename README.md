@@ -1,18 +1,42 @@
 
 <h1 align="center">CallSlicer</h1>
 <p align="center">
-<img src="images/CallSlicer.png" width=60%>
+<img src="Resources/CallSlicer.png" width=60%>
 </p>
 
 
-Apple Watch does not show you notifications of LINE call.
+Apple Watch does not show you notifications of a third-party incoming call.
+(For example: LINE, WhatsApp, Skype, WeChat, ...etc)
 
-**CallSlicer enables you to receive LINE call on your Apple Watch!**
+**CallSlicer enables you to receive a third-party incoming call on your Apple Watch!**
 
-
-(The reason why Apple Watch does not is LINE uses Apple's API *CallKit* that integrates the third-party calling apps into the iOS, but Apple Watch doesn't support CallKit.)
+(The reason why Apple Watch does not is these apps use Apple's API *CallKit* that integrates the third-party calling apps into the iOS, but Apple Watch doesn't support CallKit.)
 
 <br>
+
+**YOU NEED A JAILBROKEN IPHONE!**
+
+Jailbreaking is a dangerous process.
+I take NO RESPONSIBILITY, if something goes wrong.
+
+
+<br>
+
+## Demo
+
+<img src="Resources/sample.gif">
+
+## Supported App
+
+- LINE
+- WhatsApp
+- Skype
+- Google Hangouts
+- Facebook Messenger
+- Viber Messenger
+- KAKAOTALK
+- WeChat
+
 
 <!--
 ## Installation
@@ -20,6 +44,13 @@ Apple Watch does not show you notifications of LINE call.
 Search ```CallSlicer``` in Sileo or Cydia.
 
 CallSlicer is uploaded to Packix.-->
+
+<br>
+
+***
+
+<br><br>
+
 
 
 ## Todo
