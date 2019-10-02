@@ -1,6 +1,7 @@
 {
 	Filter = {
 		Bundles = (
+			"com.skype.skype",
 			"jp.naver.line",
 			"com.apple.springboard",
 		);

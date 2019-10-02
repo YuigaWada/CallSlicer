@@ -18,22 +18,12 @@ static dispatch_queue_t getBBServerQueue() {
     return queue;
 }
 
-//cf. http://iphonedevwiki.net/index.php/CFNotificationCenter
-static bool distributedCenterIsAvailable()
-{
-    void *handle = dlopen("/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation", RTLD_LAZY);
-    if (handle) {
-        return dlsym(handle, "CFNotificationCenterGetDistributedCenter"); // Available.
-    }
-    
-    return false;
-}
-
-
 
 
 static bool isOnLockscreen = true;
 static NSString *targetSectionID = @"jp.naver.line";
+static NSArray *targets;
+
 
 HBPreferences *preferences;
 BOOL enabled = true;
@@ -55,7 +45,7 @@ static bool isConnected() {
 }
 
 static bool isMuted() { //Must be called on SpringBoard.
-    //    NSLog(@"SBMediaController sharedInstance: %@, \nisRingerMuted:%d",[%c(SBMediaController) sharedInstance], [[%c(SBMediaController) sharedInstance] isRingerMuted]);
+//    NSLog(@"SBMediaController sharedInstance: %@, \nisRingerMuted:%d",[%c(SBMediaController) sharedInstance], [[%c(SBMediaController) sharedInstance] isRingerMuted]);
     return [[%c(SBMediaController) sharedInstance] isRingerMuted];
 }
 
@@ -96,35 +86,22 @@ static void fakeNotification(NSString *sectionID, NSString *message) {
         });
     }
     
-    
+
 }
 
 
-static void sliceNotification(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)  //called on SpringBoard.
+static void sliceNotification(NSString *target, NSString *displayName)  //called on SpringBoard.
 {
-    NSLog(@"sliceNotification");
     if(enabled && isOnLockscreen && isMuted())
     {
-        NSLog(@"userInfo: %@",userInfo);
-        
-        //メモリ管理をARCに委譲するCFBridgingReleaseを呼ぶとなぜかクラッシュするので、コード上でメモリ管理を行うよう__bridgeキャストを用いた。
-        //(CFBridgingReleaseは参照カウンタを一つ減らす)
-        //なお、メモリの開放については、"多分"reportNewIncomingCallWithUUID内のCFReleaseで解放できてるはず
-        
-        NSDictionary *reciever = (NSDictionary *)(__bridge userInfo);
-        
-        NSString *target = reciever[@"targetSectionID"];
-        NSString *displayName = reciever[@"displayName"];
-        NSLog(@"target: %@\ndisplayName:%@", target, displayName);
         NSLog(@"message: %@",[NSString stringWithFormat:@"You are receiving a Call from %@!", displayName]);
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
             fakeNotification(target,
                              [NSString stringWithFormat:@"You are receiving a Call from %@!", displayName]);
+            
         });
     }
-    
-    NSLog(@"sliceNotification - end");
 }
 
 
@@ -167,10 +144,10 @@ static void lockstate(CFNotificationCenterRef center, void *observer, CFStringRe
     NSLog(@"isOnLockscreen: %d", isOnLockscreen);
     
     //Debug
-    //    id ins = [%c(BCBatteryDeviceController) sharedInstance];
-    //
-    //    NSLog(@"BCBatteryDevice:\n %@", ins);
-    //    NSLog(@"BCBatteryDevice:\n %@", ((BCBatteryDeviceController *)ins).connectedDevices);
+//    id ins = [%c(BCBatteryDeviceController) sharedInstance];
+//
+//    NSLog(@"BCBatteryDevice:\n %@", ins);
+//    NSLog(@"BCBatteryDevice:\n %@", ((BCBatteryDeviceController *)ins).connectedDevices);
 }
 
 %end
@@ -184,20 +161,11 @@ static void lockstate(CFNotificationCenterRef center, void *observer, CFStringRe
     bool needSlicing = isConnected();
     NSLog(@"AppleWarch: %d",needSlicing);
     
-    //    NSArray *sender = @[targetSectionID,@"displayName"];
+    NSArray *sender = @[targetSectionID, @"displayName"];
+    NSString *messageName = [NSString stringWithFormat:@"%@.Messages", targetSectionID];
     
-    if(distributedCenterIsAvailable())
-    {
-        CXCallUpdate *callInfo = (CXCallUpdate *)arg2;
-        NSString *displayName = callInfo.remoteHandle.value;
-        
-        CFMutableDictionaryRef dictionary = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
-        CFDictionaryAddValue(dictionary, @"targetSectionID", targetSectionID);
-        CFDictionaryAddValue(dictionary, @"displayName", displayName);
-        
-        CFNotificationCenterPostNotification(CFNotificationCenterGetDistributedCenter(), (CFStringRef)@"com.yuigawada.callslicer/push-notification", nil, dictionary, true);
-        CFRelease(dictionary);
-    }
+    [OBJCIPC sendMessageToSpringBoardWithMessageName:messageName dictionary:@{ @"sender": sender } replyHandler: nil];
+
     %orig;
 }
 
@@ -256,31 +224,35 @@ static void lockstate(CFNotificationCenterRef center, void *observer, CFStringRe
 
 %ctor
 {
+    targets = @[@"jp.naver.line", @"com.sype.skype"];
+    
+    
     preferences = [[HBPreferences alloc] initWithIdentifier:@"com.yuigawada.callslicer"];
     [preferences registerBool:&enabled default:YES forKey:@"Enabled"];
-    //    [preferences registerObject:&message default:@"You are receiving a Call!" forKey:@"Message"];
-    
+//    [preferences registerObject:&message default:@"You are receiving a Call!" forKey:@"Message"];
+        
     NSString *processName = [NSProcessInfo processInfo].processName;
     bool isSpringboard = [@"SpringBoard" isEqualToString:processName];
     if (isSpringboard && enabled) {
         
-        //cf. http://iphonedevwiki.net/index.php/CFNotificationCenter
-        if(distributedCenterIsAvailable())
+        for(int i=0;i < [targets count];i++)
         {
-            NSLog(@"DistributedCenter is available.");
+            NSString *targetIdentifier = targets[i];
+            NSString *messageName = [NSString stringWithFormat:@"%@.Messages", targetIdentifier];
             
-            CFNotificationCenterAddObserver(CFNotificationCenterGetDistributedCenter(),
-                                            NULL,
-                                            sliceNotification,
-                                            (CFStringRef)@"com.yuigawada.callslicer/push-notification",
-                                            NULL,
-                                            CFNotificationSuspensionBehaviorDeliverImmediately);
+            [OBJCIPC registerIncomingMessageHandlerForAppWithIdentifier:targetIdentifier
+                                                         andMessageName:messageName
+                                                                handler:^NSDictionary *(NSDictionary *reciever) {
+                NSString *targetID = reciever[@"sender"][0];
+                NSString *displayName = reciever[@"sender"][1];
+                
+                NSLog(@"target: %@\ndisplayName:%@", targetID, displayName);
+                sliceNotification(targetID, displayName);
+                
+                return nil;
+            }];
+            // (CFStringRef)@"com.yuigawada.callslicer/push-notification",
         }
-        
-        
-        
-        
-        
         //For getting lockscreen info.
         CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(),
                                         NULL,

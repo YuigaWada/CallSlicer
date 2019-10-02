@@ -1,5 +1,6 @@
 #import <SpringBoard/SpringBoard.h>
 #import <CallKit/CallKit.h>
+#import <CoreFoundation/CoreFoundation.h>
 #import <os/log.h>
 #import <objc/runtime.h>
 #import <Cephei/HBPreferences.h>
