@@ -39,10 +39,13 @@ CallSlicer is uploaded to Packix.-->
 
 - [x] LINE
 - [x] Skype
-- [ ] WhatsApp
-- [ ] Google Hangouts
-- [ ] Facebook Messenger
-- [ ] Viber Messenger
+- [x] WhatsApp
+- [x] Google Hangouts
+- [x] Facebook Messenger
+- [x] Viber Messenger
+- [x] KAKAOTALK
+- [x] WeChat
+
 
 ## Contribute
 

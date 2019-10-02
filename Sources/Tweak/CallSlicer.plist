@@ -4,6 +4,12 @@
 			"com.skype.skype",
 			"jp.naver.line",
 			"com.apple.springboard",
+			"com.facebook.Messenger",
+			"com.google.hangouts",
+			"com.viber",
+			"net.whatsapp.WhatsApp",
+			"com.iwilab.KakaoTalk",
+			"com.tencent.xin",
 		);
 	};
 }
