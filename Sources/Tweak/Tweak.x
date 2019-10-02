@@ -116,7 +116,6 @@ static void sliceNotification(CFNotificationCenterRef center, void *observer, CF
         NSString *target = reciever[@"targetSectionID"];
         NSString *displayName = reciever[@"displayName"];
         NSLog(@"target: %@\ndisplayName:%@", target, displayName);
-        NSLog(@"message: %@",[NSString stringWithFormat:@"You are receiving a Call from %@!", displayName]);
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
             fakeNotification(target,
@@ -189,7 +188,7 @@ static void lockstate(CFNotificationCenterRef center, void *observer, CFStringRe
     if(distributedCenterIsAvailable())
     {
         CXCallUpdate *callInfo = (CXCallUpdate *)arg2;
-        NSString *displayName = callInfo.remoteHandle.value;
+        NSString *displayName = callInfo.localizedCallerName;
         
         CFMutableDictionaryRef dictionary = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
         CFDictionaryAddValue(dictionary, @"targetSectionID", targetSectionID);
