@@ -19,22 +19,30 @@ Apple Watch does not show you notifications of LINE call.
 
 Search ```CallSlicer``` in Sileo or Cydia.
 
-CallSlicer is uploaded in ~~.-->
+CallSlicer is uploaded to Packix.-->
 
 
 ## Todo
 
-- [ ] check whether apple watch is connected or not.
-- [ ] Other apps that use CallKit.
 - [x] 画面状態のcheck
-- [ ] イヤホンの着脱check
 - [x] silent check
 - [x] 振動の変更
 - [x] Settings
 - [x] 余計なメッセージを削除
+- [x] 設定→ SourceCode押せない
 - [ ] Fix isOnLockscreen
 - [ ] 通知遅い？
-- [x] 設定→ SourceCode押せない
+- [ ] イヤホンの着脱check
+- [ ] check whether apple watch is connected or not.
+
+## App Todo
+
+- [x] LINE
+- [x] Skype
+- [ ] WhatsApp
+- [ ] Google Hangouts
+- [ ] Facebook Messenger
+- [ ] Viber Messenger
 
 ## Contribute
 
