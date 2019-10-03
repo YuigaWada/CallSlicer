@@ -40,6 +40,28 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
+			<string>Advanced</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.yuigawada.callslicer</string>
+			<key>label</key>
+			<string>Enabled when the ringer is on</string>
+			<key>key</key>
+			<string>EnabledWhenRingerOn</string>
+			<key>alternateColors</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.yuigawada.callslicer/ReloadPrefs</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
 			<string>About</string>
 		</dict>
 		<dict>

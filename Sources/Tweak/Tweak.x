@@ -38,7 +38,10 @@ static bool isBeingLocked = true;
 
 HBPreferences *preferences;
 BOOL enabled = true;
+BOOL enabledWhenRingerOn = false;
+BOOL enabledOnlyOnLockScreen = true;
 //NSString *message;
+
 
 static bool isConnected() {
     id naverLine = [UIApplication sharedApplication];
@@ -55,10 +58,14 @@ static bool isConnected() {
     return true; //For debug
 }
 
-static bool isMuted() { //Must be called on SpringBoard.
-    //    NSLog(@"SBMediaController sharedInstance: %@, \nisRingerMuted:%d",[%c(SBMediaController) sharedInstance], [[%c(SBMediaController) sharedInstance] isRingerMuted]);
-    return [[%c(SBMediaController) sharedInstance] isRingerMuted];
+static bool checkRinger() { //Must be called on SpringBoard.
+    return enabledWhenRingerOn ? true : [[%c(SBMediaController) sharedInstance] isRingerMuted];
 }
+
+static bool checkLockscreen() {
+    return enabledOnlyOnLockScreen ? isOnLockscreen : true;
+}
+
 
 static BBSound *getBBSound()
 {
@@ -104,7 +111,7 @@ static void fakeNotification(NSString *sectionID, NSString *message) {
 static void sliceNotification(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)  //called on SpringBoard.
 {
     NSLog(@"sliceNotification");
-    if(enabled && isOnLockscreen && isMuted())
+    if(enabled && checkLockscreen() && checkRinger())
     {
         NSLog(@"userInfo: %@",userInfo);
         
@@ -116,11 +123,12 @@ static void sliceNotification(CFNotificationCenterRef center, void *observer, CF
         
         NSString *target = reciever[@"targetSectionID"];
         NSString *displayName = reciever[@"displayName"];
-        NSLog(@"target: %@\ndisplayName:%@", target, displayName);
+        NSString *video = reciever[@"hasVideo"];
+        NSLog(@"target: %@\ndisplayName: %@\nvideo: %@", target, displayName, video);
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
             fakeNotification(target,
-                             [NSString stringWithFormat:@"You are receiving a Call from %@!", displayName]);
+                             [NSString stringWithFormat:@"You are receiving a %@Call from %@!", video, displayName]);
         });
     }
     
@@ -202,6 +210,7 @@ static void lockcomplete(CFNotificationCenterRef center, void *observer, CFStrin
         CFMutableDictionaryRef dictionary = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
         CFDictionaryAddValue(dictionary, @"targetSectionID", targetSectionID);
         CFDictionaryAddValue(dictionary, @"displayName", displayName);
+        CFDictionaryAddValue(dictionary, @"hasVideo", callInfo.hasVideo ? @"Video" : @"");
         
         CFNotificationCenterPostNotification(CFNotificationCenterGetDistributedCenter(), (CFStringRef)@"com.yuigawada.callslicer/push-notification", nil, dictionary, true);
         CFRelease(dictionary);
@@ -266,6 +275,8 @@ static void lockcomplete(CFNotificationCenterRef center, void *observer, CFStrin
 {
     preferences = [[HBPreferences alloc] initWithIdentifier:@"com.yuigawada.callslicer"];
     [preferences registerBool:&enabled default:YES forKey:@"Enabled"];
+    [preferences registerBool:&enabledWhenRingerOn default:YES forKey:@"EnabledWhenRingerOn"];
+    //    [preferences registerBool:&enabledOnlyOnLockScreen default:YES forKey:@"EnabledOnlyOnLockScreen"];
     //    [preferences registerObject:&message default:@"You are receiving a Call!" forKey:@"Message"];
     
     NSString *processName = [NSProcessInfo processInfo].processName;
@@ -322,4 +333,6 @@ static void lockcomplete(CFNotificationCenterRef center, void *observer, CFStrin
     
     
     NSLog(@"Enabled: %d", enabled);
+    NSLog(@"EnabledWhenRingerOn: %d", enabledWhenRingerOn);
+    NSLog(@"EnabledOnlyOnLockScreen: %d", enabledOnlyOnLockScreen);
 }

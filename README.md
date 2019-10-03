@@ -36,14 +36,15 @@ I take NO RESPONSIBILITY, if something goes wrong.
 - Viber Messenger
 - KAKAOTALK
 - WeChat
+- Zalo
+- IMO Call
+- Vonage Business Cloud
 
-
-<!--
 ## Installation
 
 Search ```CallSlicer``` in Sileo or Cydia.
 
-CallSlicer is uploaded to Packix.-->
+CallSlicer is released on <l>[Packix](https://repo.packix.com/package/com.yuigawada.callslicer/)</l>.
 
 <br>
 
@@ -62,9 +63,13 @@ CallSlicer is uploaded to Packix.-->
 - [x] 余計なメッセージを削除
 - [x] 設定→ SourceCode押せない
 - [x] Fix isOnLockscreen Bug.
+- [x] Setting of Silent check.
 - [ ] 通知遅い？
-- [ ] イヤホンの着脱check
-- [ ] check whether apple watch is connected or not.
+- [ ] Check whether apple watch is connected or not.
+- [ ] Setting of LockScreen check.
+- [ ] Be able to select apps in AppList.
+- [ ] Be able to set a message template.
+- [ ] Check whether a call has video.
 
 ## App Todo
 
@@ -76,6 +81,9 @@ CallSlicer is uploaded to Packix.-->
 - [x] Viber Messenger
 - [x] KAKAOTALK
 - [x] WeChat
+- [x] Zalo
+- [x] IMO Call
+- [x] Vonage Business Cloud
 
 
 ## Contribute
