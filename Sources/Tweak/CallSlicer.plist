@@ -10,6 +10,9 @@
 			"net.whatsapp.WhatsApp",
 			"com.iwilab.KakaoTalk",
 			"com.tencent.xin",
+			"vn.com.vng.zingalo",
+			"co.babypenguin.imo",
+			"com.vocalocity.viphone",
 		);
 	};
 }
