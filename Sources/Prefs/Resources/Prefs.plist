@@ -29,18 +29,12 @@
 			<string>com.yuigawada.callslicer/ReloadPrefs</string>
 		</dict>
 		<dict>
-			<key>action</key>
-			<string>respring:</string>
-			<key>cell</key>
-			<string>PSButtonCell</string>
-			<key>label</key>
-			<string>RESPRING</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
 			<key>label</key>
 			<string>Advanced</string>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>If it is enabled, CallSlicer is activated regardless of the state of ringer.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -59,10 +53,12 @@
 			<string>com.yuigawada.callslicer/ReloadPrefs</string>
 		</dict>
 		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
 			<key>label</key>
 			<string>About</string>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>© Yuiga Wada(YuWd) 2019</string>
 		</dict>
 		<dict>
 			<key>action</key>
@@ -91,13 +87,22 @@
 			<string>YuigaWada</string>
 		</dict>
 		<dict>
+			<key>label</key>
+			<string>Respring</string>
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>CallSlicer by YuigaWada.</string>
-			<key>isStaticText</key>
-			<true/>
+			<string>Changes require a respring.</string>
 		</dict>
+		<dict>
+			<key>action</key>
+			<string>respring:</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>RESPRING</string>
+		</dict>
+
 	</array>
 	<key>title</key>
 	<string>CallSlicer</string>
