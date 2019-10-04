@@ -2,6 +2,7 @@
 
 extern CFNotificationCenterRef CFNotificationCenterGetDistributedCenter(void);
 
+//-MARK: Utility
 static dispatch_queue_t getBBServerQueue() {
     static dispatch_queue_t queue;
     static dispatch_once_t predicate;
@@ -31,17 +32,43 @@ static bool distributedCenterIsAvailable()
 
 
 
-
+//-MARK: For CFNotificationCenter
 static bool isOnLockscreen = true;
-static NSString *targetSectionID = @"jp.naver.line";
 static bool isBeingLocked = true;
 
+static void displayStatus(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
+{
+    isOnLockscreen = true;
+    NSLog(@"displayStatus - isOnLockscreen: %d", isOnLockscreen);
+}
+
+static void lockstate(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
+{
+    isOnLockscreen = isBeingLocked ? isBeingLocked : !isOnLockscreen;
+    isBeingLocked = false;
+    NSLog(@"lockstate - isOnLockscreen: %d", isOnLockscreen);
+}
+
+static void lockcomplete(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
+{
+    isBeingLocked = true;
+}
+
+
+
+                         
+//-MARK: For HBPreferences
 HBPreferences *preferences;
 BOOL enabled = true;
 BOOL enabledWhenRingerOn = false;
 BOOL enabledOnlyOnLockScreen = true;
 //NSString *message;
 
+
+
+
+//-MARK: For SpringBoard
+static NSString *targetSectionID = @"jp.naver.line";
 
 static bool isConnected() {
     id naverLine = [UIApplication sharedApplication];
@@ -55,7 +82,7 @@ static bool isConnected() {
         NSLog(@"WCSession is supported.");
         return session.paired;
     }
-    return true; //For debug
+    return false;
 }
 
 static bool checkRinger() { //Must be called on SpringBoard.
@@ -65,6 +92,8 @@ static bool checkRinger() { //Must be called on SpringBoard.
 static bool checkLockscreen() {
     return enabledOnlyOnLockScreen ? isOnLockscreen : true;
 }
+
+
 
 
 static BBSound *getBBSound()
@@ -103,8 +132,6 @@ static void fakeNotification(NSString *sectionID, NSString *message) {
             [bbServer publishBulletin:bulletin destinations:4];
         });
     }
-    
-    
 }
 
 
@@ -135,36 +162,8 @@ static void sliceNotification(CFNotificationCenterRef center, void *observer, CF
     NSLog(@"sliceNotification - end");
 }
 
-
-
-
-
-//-MARK: For CFNotificationCenter
-
-static void displayStatus(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
-{
-    isOnLockscreen = true;
-    NSLog(@"displayStatus - isOnLockscreen: %d", isOnLockscreen);
-}
-
-static void lockstate(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
-{
-    isOnLockscreen = isBeingLocked ? isBeingLocked : !isOnLockscreen;
-    isBeingLocked = false;
-    NSLog(@"lockstate - isOnLockscreen: %d", isOnLockscreen);
-}
-
-static void lockcomplete(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
-{
-    isBeingLocked = true;
-}
+    
                              
-                             
-
-
-
-
-//-MARK: SpringBoard
 %hook SpringBoard
 
 -(void)applicationDidFinishLaunching:(id)application {
@@ -192,36 +191,7 @@ static void lockcomplete(CFNotificationCenterRef center, void *observer, CFStrin
 %end
 
 
-//-MARK: CX
-%hook CXProvider
-
-- (void)reportNewIncomingCallWithUUID:(id)arg1 update:(id)arg2 completion:(id /* block */)arg3 {
-    
-    bool needSlicing = isConnected();
-    NSLog(@"AppleWarch: %d",needSlicing);
-    
-    //    NSArray *sender = @[targetSectionID,@"displayName"];
-    
-    if(distributedCenterIsAvailable())
-    {
-        CXCallUpdate *callInfo = (CXCallUpdate *)arg2;
-        NSString *displayName = callInfo.localizedCallerName;
-        
-        CFMutableDictionaryRef dictionary = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
-        CFDictionaryAddValue(dictionary, @"targetSectionID", targetSectionID);
-        CFDictionaryAddValue(dictionary, @"displayName", displayName);
-        CFDictionaryAddValue(dictionary, @"hasVideo", callInfo.hasVideo ? @"Video" : @"");
-        
-        CFNotificationCenterPostNotification(CFNotificationCenterGetDistributedCenter(), (CFStringRef)@"com.yuigawada.callslicer/push-notification", nil, dictionary, true);
-        CFRelease(dictionary);
-    }
-    %orig;
-}
-
-%end
-
-
-//-MARK: BulletinBoard
+//BulletinBoard
 %hook BBServer
 
 - (void)publishBulletin:(BBBulletin *)bulletin destinations:(NSUInteger)destinations
@@ -267,6 +237,39 @@ static void lockcomplete(CFNotificationCenterRef center, void *observer, CFStrin
 }
 
 %end
+
+
+
+
+
+//-MARK: For Third-Party Calling Apps
+%hook CXProvider
+
+- (void)reportNewIncomingCallWithUUID:(id)arg1 update:(id)arg2 completion:(id /* block */)arg3 {
+    
+    bool needSlicing = isConnected();
+    NSLog(@"AppleWarch: %d",needSlicing);
+    
+    //    NSArray *sender = @[targetSectionID,@"displayName"];
+    
+    if(distributedCenterIsAvailable())
+    {
+        CXCallUpdate *callInfo = (CXCallUpdate *)arg2;
+        NSString *displayName = callInfo.localizedCallerName;
+        
+        CFMutableDictionaryRef dictionary = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+        CFDictionaryAddValue(dictionary, @"targetSectionID", targetSectionID);
+        CFDictionaryAddValue(dictionary, @"displayName", displayName);
+        CFDictionaryAddValue(dictionary, @"hasVideo", callInfo.hasVideo ? @"Video" : @"");
+        
+        CFNotificationCenterPostNotification(CFNotificationCenterGetDistributedCenter(), (CFStringRef)@"com.yuigawada.callslicer/push-notification", nil, dictionary, true);
+        CFRelease(dictionary);
+    }
+    %orig;
+}
+
+%end
+
 
 
 //-MARK: init
