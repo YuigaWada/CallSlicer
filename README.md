@@ -70,6 +70,7 @@ CallSlicer is released on <l>[Packix](https://repo.packix.com/package/com.yuigaw
 - [ ] Be able to select apps in AppList.
 - [ ] Be able to set a message template.
 - [ ] Check whether a call has video.
+- [ ] Fix conflict with Call Bar.
 
 ## App Todo
 
@@ -84,6 +85,8 @@ CallSlicer is released on <l>[Packix](https://repo.packix.com/package/com.yuigaw
 - [x] Zalo
 - [x] IMO Call
 - [x] Vonage Business Cloud
+- [ ] ToTok
+
 
 
 ## Contribute
