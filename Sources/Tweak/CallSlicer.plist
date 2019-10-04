@@ -13,7 +13,9 @@
 			"vn.com.vng.zingalo",
 			"co.babypenguin.imo",
 			"com.vocalocity.viphone",
-			"imoimiphone",
+			imoimiphone,
+			"ai.totok.videochat",
+			"ph.telegra.Telegraph",
 		);
 	};
 }
