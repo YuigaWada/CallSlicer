@@ -39,6 +39,8 @@ I take NO RESPONSIBILITY, if something goes wrong.
 - Zalo
 - IMO Call
 - Vonage Business Cloud
+- ToTok
+- Telegram
 
 ## Installation
 
@@ -64,13 +66,15 @@ CallSlicer is released on <l>[Packix](https://repo.packix.com/package/com.yuigaw
 - [x] 設定→ SourceCode押せない
 - [x] Fix isOnLockscreen Bug.
 - [x] Setting of Silent check.
+- [x] Fix conflict with CallBar → No conflict.
+- [x] Check whether a call has video.
 - [ ] 通知遅い？
 - [ ] Check whether apple watch is connected or not.
 - [ ] Setting of LockScreen check.
 - [ ] Be able to select apps in AppList.
 - [ ] Be able to set a message template.
-- [ ] Check whether a call has video.
-- [ ] Fix conflict with Call Bar.
+
+
 
 ## App Todo
 
@@ -85,7 +89,9 @@ CallSlicer is released on <l>[Packix](https://repo.packix.com/package/com.yuigaw
 - [x] Zalo
 - [x] IMO Call
 - [x] Vonage Business Cloud
-- [ ] ToTok
+- [x] ToTok
+- [x] Telegram
+
 
 
 
