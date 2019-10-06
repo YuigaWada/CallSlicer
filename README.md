@@ -41,6 +41,12 @@ I take NO RESPONSIBILITY, if something goes wrong.
 - Vonage Business Cloud
 - ToTok
 - Telegram
+- Wire Messenger
+- Threema
+- Discord
+- Microsoft Teams
+- Skype for Business
+- Signal
 
 ## Installation
 
@@ -73,6 +79,7 @@ CallSlicer is released on <l>[Packix](https://repo.packix.com/package/com.yuigaw
 - [ ] Setting of LockScreen check.
 - [ ] Be able to select apps in AppList.
 - [ ] Be able to set a message template.
+- [ ] Be able to change the title.
 
 
 
@@ -91,6 +98,12 @@ CallSlicer is released on <l>[Packix](https://repo.packix.com/package/com.yuigaw
 - [x] Vonage Business Cloud
 - [x] ToTok
 - [x] Telegram
+- [x] Wire Messenger
+- [x] Threema
+- [x] Discord
+- [x] Microsoft Teams
+- [x] Skype for Business
+- [x] Signal
 
 
 

@@ -16,6 +16,12 @@
 			imoimiphone,
 			"ai.totok.videochat",
 			"ph.telegra.Telegraph",
+			"com.wearezeta.zclient.ios",
+			"ch.threema.iapp",
+			"com.hammerandchisel.discord",
+			"com.microsoft.skype.teams",
+			"com.microsoft.lync2013.iphone",
+			"org.whispersystems.signal",
 		);
 	};
 }
