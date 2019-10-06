@@ -71,12 +71,12 @@ BOOL enabledOnlyOnLockScreen = true;
 static NSString *targetSectionID = @"jp.naver.line";
 
 static bool isConnected() {
-    id naverLine = [UIApplication sharedApplication];
+    id appInstance = [UIApplication sharedApplication];
     
-    NSLog(@"LINE instance: \n%@", naverLine);
+    NSLog(@"App instance: \n%@", appInstance);
     if ([WCSession isSupported]) {
         WCSession* session = [WCSession defaultSession];
-        session.delegate = naverLine;
+        session.delegate = appInstance;
         [session activateSession];
         
         NSLog(@"WCSession is supported.");
@@ -162,6 +162,26 @@ static void sliceNotification(CFNotificationCenterRef center, void *observer, CF
     NSLog(@"sliceNotification - end");
 }
 
+//cf. Ny comments in %ctor
+static bool preparedDC = false;
+static void prepareDistributedCenter(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
+{
+    //cf. http://iphonedevwiki.net/index.php/CFNotificationCenter
+    if(distributedCenterIsAvailable() && !preparedDC)
+    {
+        NSLog(@"DistributedCenter is available.");
+        
+        CFNotificationCenterAddObserver(CFNotificationCenterGetDistributedCenter(),
+                                        NULL,
+                                        sliceNotification,
+                                        (CFStringRef)@"com.yuigawada.callslicer/push-notification",
+                                        NULL,
+                                        CFNotificationSuspensionBehaviorDeliverImmediately);
+        
+        preparedDC = true;
+    }
+}
+
     
                              
 %hook SpringBoard
@@ -196,17 +216,19 @@ static void sliceNotification(CFNotificationCenterRef center, void *observer, CF
 
 - (void)publishBulletin:(BBBulletin *)bulletin destinations:(NSUInteger)destinations
 {
-    BBSound *sound = bulletin.sound;
-    bool hasSound = sound != nil;
-    bool isLINE = [bulletin.sectionID isEqualToString: targetSectionID];
-    if(!hasSound && isLINE && !enabled) { return; }
+    //Debug
+    
+//    BBSound *sound = bulletin.sound;
+//    bool hasSound = sound != nil;
+//    bool isLINE = [bulletin.sectionID isEqualToString: targetSectionID];
+//    if(!hasSound && isLINE && !enabled) { return; }
     
     %orig;
     
-    //Debug
-    NSLog(@"BBServer publishBulletin\nTitle: %@\nSubtitle: %@\nMessage: %@\nBulletin: %@\ndestinations: %@", bulletin.title, bulletin.subtitle, bulletin.message, bulletin, @(destinations).stringValue);
-    NSLog(@"BBSound: %@, \nVibration Pattern: %@ \nVibration Identifier: %@", sound, [sound vibrationPattern], [sound vibrationIdentifier]);
-    NSLog(@"hasSound: %d, \nisLINE: %d, \nbulletin.sectionID: %@, \ntargetSectionID: %@", hasSound, isLINE, bulletin.sectionID, targetSectionID);
+    
+//    NSLog(@"BBServer publishBulletin\nTitle: %@\nSubtitle: %@\nMessage: %@\nBulletin: %@\ndestinations: %@", bulletin.title, bulletin.subtitle, bulletin.message, bulletin, @(destinations).stringValue);
+//    NSLog(@"BBSound: %@, \nVibration Pattern: %@ \nVibration Identifier: %@", sound, [sound vibrationPattern], [sound vibrationIdentifier]);
+//    NSLog(@"hasSound: %d, \nisLINE: %d, \nbulletin.sectionID: %@, \ntargetSectionID: %@", hasSound, isLINE, bulletin.sectionID, targetSectionID);
 }
 
 %end
@@ -248,7 +270,7 @@ static void sliceNotification(CFNotificationCenterRef center, void *observer, CF
 - (void)reportNewIncomingCallWithUUID:(id)arg1 update:(id)arg2 completion:(id /* block */)arg3 {
     
     bool needSlicing = isConnected();
-    NSLog(@"AppleWarch: %d",needSlicing);
+    NSLog(@"AppleWatch: %d",needSlicing);
     
     //    NSArray *sender = @[targetSectionID,@"displayName"];
     
@@ -286,21 +308,15 @@ static void sliceNotification(CFNotificationCenterRef center, void *observer, CF
     bool isSpringboard = [@"SpringBoard" isEqualToString:processName];
     if (isSpringboard && enabled) {
         
-        //cf. http://iphonedevwiki.net/index.php/CFNotificationCenter
-        if(distributedCenterIsAvailable())
-        {
-            NSLog(@"DistributedCenter is available.");
-            
-            CFNotificationCenterAddObserver(CFNotificationCenterGetDistributedCenter(),
-                                            NULL,
-                                            sliceNotification,
-                                            (CFStringRef)@"com.yuigawada.callslicer/push-notification",
-                                            NULL,
-                                            CFNotificationSuspensionBehaviorDeliverImmediately);
-        }
+
         
-        
-        
+        //For prepareing DistributedCenter
+        CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(),
+                                        NULL,
+                                        prepareDistributedCenter,
+                                        CFSTR("com.yuigawada.callslicer/prepare-DistributedCenter"),
+                                        NULL,
+                                        CFNotificationSuspensionBehaviorDeliverImmediately);
         
         
         //For getting lockscreen info.
@@ -332,6 +348,10 @@ static void sliceNotification(CFNotificationCenterRef center, void *observer, CF
     else {
         targetSectionID = [[NSBundle mainBundle] bundleIdentifier];
         NSLog(@"targetSectionID: %@",targetSectionID);
+        
+        //稀に、respring直後にDistributedCenterがうまく機能しないことが報告されており、Springboard上でのDistributedCenterの登録がうまく機能していないのだと推測。
+        //故にDarwinNotifyCenterで登録にディレイをかけることにした。具体的な処理サイクルについてはコミットログを参照してください。
+        CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), (CFStringRef)@"com.yuigawada.callslicer/prepare-DistributedCenter", nil, nil, true);
     }
     
     
