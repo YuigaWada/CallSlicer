@@ -60,7 +60,11 @@ CallSlicer is released on <l>[Packix](https://repo.packix.com/package/com.yuigaw
 
 <br><br>
 
+## Thanks For 2000 Downloads !
 
+<img src="Resources/THANKS.png" width=50%>
+
+<br><br>
 
 ## Todo
 
